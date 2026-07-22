@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AthleteID — Sports Person Classifier</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./dropzone.min.css">
+    <link rel="stylesheet" href="./app.css">
+</head>
+
+<body>
+    <div class="bg-glow bg-glow-a" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow-b" aria-hidden="true"></div>
+    <div class="court-lines" aria-hidden="true"></div>
+
+    <header class="site-header">
+        <div class="shell header-bar">
+            <a class="brand" href="/">
+                <span class="brand-mark">AI</span>
+                <span class="brand-text">Athlete<span>ID</span></span>
+            </a>
+            <p class="header-tag">OpenCV · scikit-learn · Flask</p>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero shell">
+            <div class="hero-copy">
+                <p class="eyebrow">Sports face recognition</p>
+                <h1>Who’s in the frame?</h1>
+                <p class="lede">
+                    Drop a clear portrait and AthleteID matches it against five legendary athletes
+                    using Haar cascades and a trained ML classifier.
+                </p>
+            </div>
+            <div class="hero-stats" aria-label="Model coverage">
+                <div class="stat">
+                    <strong>5</strong>
+                    <span>Athletes</span>
+                </div>
+                <div class="stat">
+                    <strong>ML</strong>
+                    <span>Wavelet + SVM</span>
+                </div>
+                <div class="stat">
+                    <strong>1</strong>
+                    <span>Click to classify</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="shell roster-section">
+            <div class="section-head">
+                <h2>The roster</h2>
+                <p>These are the faces the model was trained to recognize.</p>
+            </div>
+            <div class="roster-grid" id="roster">
+                <article class="athlete-card" data-player="lionel_messi" data-sport="Football">
+                    <div class="athlete-photo">
+                        <img src="./images/leonel_messi.webp" alt="Lionel Messi" draggable="false">
+                    </div>
+                    <div class="athlete-meta">
+                        <h3>Lionel Messi</h3>
+                        <span>Football</span>
+                    </div>
+                </article>
+                <article class="athlete-card" data-player="maria_sharapova" data-sport="Tennis">
+                    <div class="athlete-photo">
+                        <img src="./images/maria_shaparova.jfif" alt="Maria Sharapova" draggable="false">
+                    </div>
+                    <div class="athlete-meta">
+                        <h3>Maria Sharapova</h3>
+                        <span>Tennis</span>
+                    </div>
+                </article>
+                <article class="athlete-card" data-player="roger_federer" data-sport="Tennis">
+                    <div class="athlete-photo">
+                        <img src="./images/rogger.jfif" alt="Roger Federer" draggable="false">
+                    </div>
+                    <div class="athlete-meta">
+                        <h3>Roger Federer</h3>
+                        <span>Tennis</span>
+                    </div>
+                </article>
+                <article class="athlete-card" data-player="serena_williams" data-sport="Tennis">
+                    <div class="athlete-photo">
+                        <img src="./images/serena_williams.jfif" alt="Serena Williams" draggable="false">
+                    </div>
+                    <div class="athlete-meta">
+                        <h3>Serena Williams</h3>
+                        <span>Tennis</span>
+                    </div>
+                </article>
+                <article class="athlete-card" data-player="virat_kohli" data-sport="Cricket">
+                    <div class="athlete-photo">
+                        <img src="./images/virat_kohli.cms" alt="Virat Kohli" draggable="false">
+                    </div>
+                    <div class="athlete-meta">
+                        <h3>Virat Kohli</h3>
+                        <span>Cricket</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="shell workspace">
+            <div class="upload-panel panel">
+                <div class="panel-head">
+                    <h2>Upload a photo</h2>
+                    <p>Best results: a clear front-facing face close-up. Action shots and tiny faces are often misclassified.</p>
+                </div>
+                <form action="/file-upload" class="dropzone" id="dropzone">
+                    <div class="dz-message needsclick">
+                        <div class="upload-icon" aria-hidden="true">
+                            <svg viewBox="0 0 48 48" fill="none">
+                                <path d="M24 32V12M24 12L16 20M24 12L32 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M10 34C10 37.3137 12.6863 40 16 40H32C35.3137 40 38 37.3137 38 34" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <p class="upload-title">Drop image here or click to browse</p>
+                        <p class="upload-hint">JPG, PNG, or WEBP · one file</p>
+                    </div>
+                </form>
+                <button id="submitBtn" type="button" class="classify-btn">
+                    <span class="btn-label">Classify athlete</span>
+                    <span class="btn-spinner" aria-hidden="true"></span>
+                </button>
+            </div>
+
+            <div class="result-panel panel">
+                <div class="panel-head">
+                    <h2>Prediction</h2>
+                    <p>Top match and confidence across the full roster.</p>
+                </div>
+
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-ring"></div>
+                    <p>Your result will appear here after you classify an image.</p>
+                </div>
+
+                <div id="error" class="status-message" role="alert" hidden></div>
+
+                <div id="resultHolder" class="result-card" hidden></div>
+
+                <div id="divClassTable" class="score-board" hidden>
+                    <h3>Confidence breakdown</h3>
+                    <ul class="score-list" id="scoreList">
+                        <li data-score="lionel_messi">
+                            <div class="score-row">
+                                <span class="score-name">Lionel Messi</span>
+                                <span class="score-value" id="score_lionel_messi">0%</span>
+                            </div>
+                            <div class="score-track"><div class="score-fill" id="bar_lionel_messi"></div></div>
+                        </li>
+                        <li data-score="maria_sharapova">
+                            <div class="score-row">
+                                <span class="score-name">Maria Sharapova</span>
+                                <span class="score-value" id="score_maria_sharapova">0%</span>
+                            </div>
+                            <div class="score-track"><div class="score-fill" id="bar_maria_sharapova"></div></div>
+                        </li>
+                        <li data-score="roger_federer">
+                            <div class="score-row">
+                                <span class="score-name">Roger Federer</span>
+                                <span class="score-value" id="score_roger_federer">0%</span>
+                            </div>
+                            <div class="score-track"><div class="score-fill" id="bar_roger_federer"></div></div>
+                        </li>
+                        <li data-score="serena_williams">
+                            <div class="score-row">
+                                <span class="score-name">Serena Williams</span>
+                                <span class="score-value" id="score_serena_williams">0%</span>
+                            </div>
+                            <div class="score-track"><div class="score-fill" id="bar_serena_williams"></div></div>
+                        </li>
+                        <li data-score="virat_kohli">
+                            <div class="score-row">
+                                <span class="score-name">Virat Kohli</span>
+                                <span class="score-value" id="score_virat_kohli">0%</span>
+                            </div>
+                            <div class="score-track"><div class="score-fill" id="bar_virat_kohli"></div></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer shell">
+        <p>AthleteID · Flask + OpenCV + scikit-learn</p>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="./dropzone.min.js"></script>
+    <script src="./app.js"></script>
+</body>
+
+</html>
