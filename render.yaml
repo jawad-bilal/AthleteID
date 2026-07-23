@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: athleteid
+    runtime: python
+    plan: free
+    buildCommand: pip install -r server/requirements.txt
+    startCommand: gunicorn --chdir server -b 0.0.0.0:$PORT --timeout 120 --workers 1 server:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9

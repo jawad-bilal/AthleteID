@@ -27,7 +27,7 @@ Classify photos of five athletes using OpenCV face detection, wavelet features, 
 - Flask (HTTP server; also serves the UI)  
 - HTML / CSS / JavaScript  
 
-## Quick start
+## Quick start (local)
 
 ```bash
 cd server
@@ -37,7 +37,21 @@ python server.py
 
 Open **http://127.0.0.1:5000/** in your browser.
 
-You only need one process now — Flask serves both the UI and `/classify_image`.
+You only need one process — Flask serves both the UI and `/classify_image`.
+
+## Deploy on Render (free)
+
+1. Push this repo to GitHub (already connected as `AthleteID`).
+2. In [Render](https://dashboard.render.com) → **New** → **Web Service**.
+3. Connect the GitHub repo.
+4. Use these settings:
+   - **Runtime:** Python
+   - **Build Command:** `pip install -r server/requirements.txt`
+   - **Start Command:** `gunicorn --chdir server -b 0.0.0.0:$PORT --timeout 120 --workers 1 server:app`
+5. Choose the **Free** plan → **Create Web Service**.
+6. Wait for the deploy, then open the `*.onrender.com` URL.
+
+Note: free services sleep after idle; the first request after sleep can take ~30–60s.
 
 ## Notes
 

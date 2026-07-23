@@ -52,8 +52,12 @@ def classify_image():
     return api_response(result)
 
 
+# Load model when the app/worker starts (needed for Gunicorn on Render).
+util.load_saved_artifacts()
+
+
 if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
     print("Starting Python Flask Server For Sports Celebrity Image Classification")
-    print(f"UI available at http://127.0.0.1:5000/")
-    util.load_saved_artifacts()
-    app.run(port=5000)
+    print(f"UI available at http://0.0.0.0:{port}/")
+    app.run(host="0.0.0.0", port=port)
