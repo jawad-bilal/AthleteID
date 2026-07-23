@@ -1,3 +1,13 @@
+---
+title: AthleteID
+emoji: 🏆
+colorFrom: green
+colorTo: blue
+sdk: docker
+pinned: false
+app_port: 7860
+---
+
 # AthleteID — Sports Celebrity Image Classification
 
 Classify photos of five athletes using OpenCV face detection, wavelet features, and a scikit-learn model served by Flask.
@@ -39,19 +49,11 @@ Open **http://127.0.0.1:5000/** in your browser.
 
 You only need one process — Flask serves both the UI and `/classify_image`.
 
-## Deploy on Render (free)
+## Deploy on Hugging Face Spaces (free, no card)
 
-1. Push this repo to GitHub (already connected as `AthleteID`).
-2. In [Render](https://dashboard.render.com) → **New** → **Web Service**.
-3. Connect the GitHub repo.
-4. Use these settings:
-   - **Runtime:** Python
-   - **Build Command:** `pip install -r server/requirements.txt`
-   - **Start Command:** `gunicorn --chdir server -b 0.0.0.0:$PORT --timeout 120 --workers 1 server:app`
-5. Choose the **Free** plan → **Create Web Service**.
-6. Wait for the deploy, then open the `*.onrender.com` URL.
-
-Note: free services sleep after idle; the first request after sleep can take ~30–60s.
+1. Create a **Docker** Space on Hugging Face.
+2. Push this repo to the Space (steps below in chat / docs).
+3. Wait for the Docker build, then open the Space URL.
 
 ## Notes
 
