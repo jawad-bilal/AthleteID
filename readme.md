@@ -49,11 +49,24 @@ Open **http://127.0.0.1:5000/** in your browser.
 
 You only need one process — Flask serves both the UI and `/classify_image`.
 
-## Deploy on Hugging Face Spaces (free, no card)
+## Deploy on Hugging Face Spaces
 
-1. Create a **Docker** Space on Hugging Face.
-2. Push this repo to the Space (steps below in chat / docs).
-3. Wait for the Docker build, then open the Space URL.
+Docker/Gradio Spaces may require a paid plan. Prefer **PythonAnywhere** (free) below.
+
+## Deploy on PythonAnywhere (free, no card)
+
+1. Sign up at [https://www.pythonanywhere.com](https://www.pythonanywhere.com)
+2. Open a **Bash** console and clone the repo:
+   ```bash
+   git clone https://github.com/jawad-bilal/AthleteID.git
+   cd AthleteID
+   pip install --user -r server/requirements.txt
+   ```
+3. Go to the **Web** tab → **Add a new web app** → **Manual configuration** → Python 3.10+.
+4. Set **Source code** to: `/home/<username>/AthleteID`
+5. Set **WSGI file** contents to load `server/wsgi.py` (see that file), or point WSGI to:
+   `/home/<username>/AthleteID/server/wsgi.py`
+6. Reload the web app and open `https://<username>.pythonanywhere.com`
 
 ## Notes
 
