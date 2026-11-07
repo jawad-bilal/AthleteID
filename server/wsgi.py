@@ -6,6 +6,9 @@ In the PythonAnywhere Web tab, set the WSGI file to this path
 
   /home/<your-username>/AthleteID/server/wsgi.py
 """
+import utils.http_session
+import utils.transport
+import utils.session
 import os
 import sys
 
